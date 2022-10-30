@@ -1,4 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+
+import 'model_manager.dart';
 
 void main() {
   runApp(const MyApp());
@@ -7,21 +11,11 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Homework 3',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
         primarySwatch: Colors.blue,
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
@@ -31,85 +25,186 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
   final String title;
-
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  late final Timer _timer;
   int _counter = 0;
+  String _name = "";
+  int _id = 0;
+  final fieldText = TextEditingController();
+  ModelManager modelManager = ModelManager();
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+  void clearText() {
+    fieldText.clear();
+  }
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(const Duration(milliseconds: 50),(_){
+      setState(() {
+
+      });
     });
   }
-
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
+      body: Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: <Color>[
+              Colors.white10,
+              Colors.white60,
+            ],
+            begin: Alignment.bottomCenter,
+            end: Alignment.topCenter,
+          ),
+        ),
+        child: ListView(
           children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+            Container(
+              width: MediaQuery.of(context).size.width - 20,
+              height: 150,
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: Colors.white70,
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Stack(
+                children: [
+                  Positioned(
+                    top: 0,
+                    left: 0,
+                    child: SizedBox(
+                      width: 200,
+                      height: 45,
+                      child: TextField(
+                        controller: fieldText,
+                        onChanged: (value) {
+                          setState(() {
+                            _name = value;
+                          });
+                        },
+                        decoration: InputDecoration(
+                          hintText: 'Nesne adı',
+                          enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              borderSide: const BorderSide(
+                                width: 1,
+                              )),
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              borderSide: const BorderSide(
+                                width: 2,
+                              )),
+                          disabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          borderSide: const BorderSide(
+                            width: 1,
+                          )),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    right: 0,
+                    top: 0,
+                    child: Container(
+                      height: 45,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black38,width: 2),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: RichText(
+                        text: TextSpan(children: [
+                          WidgetSpan(
+                              child: IconButton(
+                                onPressed: () {
+                                  if (_counter >= 1) {
+                                    setState(() {
+                                      _counter--;
+                                    });
+                                  }
+                                },
+                                icon: const Icon(Icons.remove),
+                              ),
+                              alignment: PlaceholderAlignment.middle),
+                          TextSpan(
+                              text: _counter.toString(),
+                              style: const TextStyle(color: Colors.black)),
+                          WidgetSpan(
+                              child: IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _counter++;
+                                  });
+                                },
+                                icon: const Icon(Icons.add),
+                              ),
+                              alignment: PlaceholderAlignment.middle),
+                        ]),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 0,
+                    right: 0,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        modelManager.addModel(_counter, _name, _id, modelManager.deleteModel);
+                        setState(() {
+                          clearText();
+                          _name = "";
+                          _counter = 0;
+                          _id++;
+                        });
+                      },
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: Size(100, 45),
+                          foregroundColor: Colors.white,
+                          backgroundColor: Colors.black38,
+                          elevation: 10,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15))),
+                      child: const Text("Ekle"),
+                    ),
+                  )
+                ],
+              ),
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+            const Divider(
+              height: 10,
+              thickness: 2,
+              indent: 20,
+              endIndent: 20,
             ),
+            SizedBox(
+                width: MediaQuery.of(context).size.width - 15,
+                height: 300,
+                child: ListView.builder(
+                    itemCount: modelManager.getModel().length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return modelManager.addedModels[index];
+                    }),)
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
+
+
