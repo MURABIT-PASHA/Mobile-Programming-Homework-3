@@ -1,16 +1,15 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-
 import 'model_manager.dart';
 
-void main() {
+void main() async{
+
+
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -174,7 +173,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         });
                       },
                       style: ElevatedButton.styleFrom(
-                        minimumSize: Size(100, 45),
+                        minimumSize: const Size(100, 45),
                           foregroundColor: Colors.white,
                           backgroundColor: Colors.black38,
                           elevation: 10,
@@ -194,7 +193,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             SizedBox(
                 width: MediaQuery.of(context).size.width - 15,
-                height: 300,
+                height: MediaQuery.of(context).size.height - 300,
                 child: ListView.builder(
                     itemCount: modelManager.getModel().length,
                     itemBuilder: (BuildContext context, int index) {
@@ -205,6 +204,8 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
+
+
 }
 
 
